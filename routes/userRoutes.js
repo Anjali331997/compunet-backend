@@ -24,7 +24,7 @@ router.post('/register', async (req, res) => {
     }
 })
 
-//login-up
+//login
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -41,9 +41,9 @@ router.post('/login', async (req, res) => {
 
         const token = jwt.sign({
             _id: user._id.toString()
-        }, process.env.JWT_SECRET_KEY)
+        }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' })
         
-        res.send({ user, token });
+        res.send({token });
     
     } catch (err) {
         res.status(400).send({ error: err })
