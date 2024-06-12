@@ -12,9 +12,9 @@ router.get('/', (req, res) => {
 router.post('/register', async (req, res) => {
 
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password, address } = req.body;
         // console.log(name,email,password)
-        const new_user = new User({ name, email, password });
+        const new_user = new User({ name, email, password, address });
         await new_user.save();
         res.status(201).send({ new_user, message: "User created successfully" })
     }
@@ -28,7 +28,7 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
-        const user = await User.findOne({email:email})
+        const user = await User.findOne({ email: email })
         console.log(user)
         if (!user) {
             throw new Error("Unable to login, Invalid credentials")
@@ -40,11 +40,11 @@ router.post('/login', async (req, res) => {
         }
 
         const token = jwt.sign({
-            _id: user._id.toString()
+            _id: user._id.toString(),
         }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' })
-        
-        res.send({token });
-    
+
+        res.send({ user,token });
+
     } catch (err) {
         res.status(400).send({ error: err })
     }
